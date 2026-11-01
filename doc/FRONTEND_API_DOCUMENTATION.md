@@ -1,6 +1,6 @@
-# 文芽 Flask 服务前端 API 功能文档
+﻿# 文芽 Flask 服务前端 API 功能文档
 
-> 基于当前后端代码（`routes/*.py` + `app.py`）整理。  
+> 基于当前后端代码（`routes/*.py` + `app.py`）整理。
 > 适用于前端联调与接口接入，不包含数据库内部实现细节。
 
 ## 1. 基础信息
@@ -85,44 +85,7 @@
 
 ## 4. 认证模块（`/api/auth`）
 
-## 4.1 发送监护人验证码
-
-- **POST** `/api/auth/send-guardian-code`
-- 认证：否
-- 限流：`3 per hour`
-- 请求体：
-
-```json
-{
-  "phone": "13800138000"
-}
-```
-
-- 说明：用于注册前的监护人验证码发送（当前实现为服务端内存存储）。
-
-## 4.2 注册
-
-- **POST** `/api/auth/register`
-- 认证：否
-- 限流：`5 per hour`
-- 请求体：
-
-```json
-{
-  "username": "student01",
-  "password": "Passw0rd123",
-  "grade": 8,
-  "birth_date": "2012-01-01",
-  "guardian_name": "家长",
-  "guardian_phone": "13800138000",
-  "guardian_relationship": "parent",
-  "guardian_verification_code": "123456"
-}
-```
-
-- 成功：创建用户、画像、AI记忆并自动登录，返回 `user`。
-
-## 4.3 登录
+## 4.1 登录
 
 - **POST** `/api/auth/login`
 - 认证：否
@@ -139,13 +102,13 @@
 
 - 成功：返回 `user`，并建立会话。
 
-## 4.4 登出
+## 4.2 登出
 
 - **POST** `/api/auth/logout`
 - 认证：是
 - 成功：清除登录态。
 
-## 4.5 修改密码
+## 4.3 修改密码
 
 - **POST** `/api/auth/change-password`
 - 认证：是
@@ -159,7 +122,7 @@
 }
 ```
 
-## 4.6 获取/更新个人资料
+## 4.4 获取/更新个人资料
 
 - **GET** `/api/auth/profile`
   - 认证：是
@@ -173,14 +136,14 @@
     - `show_works_publicly`（布尔）
     - `grade`
 
-## 4.7 导出个人数据
+## 4.5 导出个人数据
 
 - **POST** `/api/auth/export-data`
 - 认证：是
 - 限流：`3 per day`
 - 返回：用户信息、画像、全部作文（含内容和评分）、导出时间。
 
-## 4.8 获取当前用户信息
+## 4.6 获取当前用户信息
 
 - **GET** `/api/auth/me`
 - 认证：是
@@ -219,7 +182,7 @@
 
 - **GET** `/api/compliance/info`
 - 认证：否
-- 返回：ICP备案号、算法备案号、隐私政策/服务条款地址
+- 返回：ICP 备案号、算法备案号、隐私政策/服务条款地址
 
 ## 5.5 通知列表
 
@@ -364,7 +327,7 @@
   - `page` 默认 1
   - `per_page` 默认 10，最大 100
   - `status` 默认 `all`
-- 返回：分页数据（每项为作文摘要+评分）
+- 返回：分页数据（每项为作文摘要 + 评分）
 
 ---
 
@@ -448,7 +411,7 @@
 - **GET** `/api/community/works`
 - 认证：否
 - 查询参数：
-  - 分页：`page`（默认1）, `per_page`（默认12）
+  - 分页：`page`（默认 1）, `per_page`（默认 12）
   - 筛选：`grade`, `school_stage`, `genre`, `tag`, `q`, `featured`
 - 说明：
   - 仅返回 `review_status=approved` 且作者允许公开展示的作品
@@ -509,7 +472,7 @@
 ```json
 {
   "reason": "spam",
-  "description": "可选，最多500字"
+  "description": "可选，最多 500 字"
 }
 ```
 
@@ -550,7 +513,7 @@
 
 - **GET** `/api/community/featured`
 - 认证：否
-- 参数：`page`（默认1）, `per_page`（默认6）
+- 参数：`page`（默认 1）, `per_page`（默认 6）
 - 返回：精选作品分页
 
 ---
@@ -587,8 +550,8 @@
 - 参数：
   - `q`（查询词）
   - `category`
-  - `top_k`（默认10，最大50）
-  - `min_importance`（默认0.3）
+  - `top_k`（默认 10，最大 50）
+  - `min_importance`（默认 0.3）
 - 返回：`fragments[]`, `count`, `query`
 
 ## 9.4 删除记忆片段
@@ -600,7 +563,7 @@
 - **GET** `/api/memory/aggregate`
 - 参数：
   - `category`
-  - `days`（默认30）
+  - `days`（默认 30）
 - 返回：`summary`, `time_range_days`
 
 ## 9.6 获取交互上下文
@@ -635,10 +598,9 @@
 
 ## 10. 前端接入建议（基于现有实现）
 
-1. **统一处理 `code` 字段**：`code=0` 成功，`code=1` 失败。  
-2. **会话接口必须携带 Cookie**：跨域时前端需开启 `withCredentials=true`。  
-3. **实现 401 统一跳转登录**，403/429/503 做明确提示。  
-4. **分页接口统一读取 `pagination`**，不要自行推断。  
-5. **写作与社区接口涉及内容安全拦截**，前端需要展示后端返回的具体错误文案。  
-6. **排行榜、社区均有“可见性/审核状态”逻辑**，前端要按状态展示，不应默认“提交即公开”。  
-
+1. **统一处理 `code` 字段**：`code=0` 成功，`code=1` 失败。
+2. **会话接口必须携带 Cookie**：跨域时前端需开启 `withCredentials=true`。
+3. **实现 401 统一跳转登录**，403/429/503 做明确提示。
+4. **分页接口统一读取 `pagination`**，不要自行推断。
+5. **写作与社区接口涉及内容安全拦截**，前端需要展示后端返回的具体错误文案。
+6. **排行榜、社区均有"可见性/审核状态"逻辑**，前端要按状态展示，不应默认"提交即公开"。

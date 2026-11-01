@@ -9,7 +9,7 @@
 
 - 操作系统：Windows（本项目当前目录结构为 Windows 环境）
 - Python：建议 3.11（项目内已有 `.venv`）
-- 当前工作目录：项目根目录  
+- 当前工作目录：项目根目录
 
 ---
 
@@ -54,13 +54,13 @@ python -m pip install -r requirements.txt
 
 - 配置文件路径：`tests\test_ai.env`
 - 已提供模板（tests\test_ai.env.example）
-- 将tests\test_ai.env.example复制成tests\test_ai.env，并修改配置值
+- 将 tests\test_ai.env.example 复制成 tests\test_ai.env，并修改配置值
 - 读取优先级：`tests\test_ai.env` > 系统环境变量
 
 如果你不使用 `tests\test_ai.env`，也可以在 PowerShell 中设置：
 
 ```powershell
-$env:TEST_REAL_AI_API_KEY = "你的真实APIKey"
+$env:TEST_REAL_AI_API_KEY = "你的真实 APIKey"
 $env:TEST_REAL_AI_PROVIDER = "openai"      # 可选，默认 openai
 $env:TEST_REAL_AI_API_BASE = ""             # 可选，自定义网关时填写
 $env:TEST_REAL_AI_MODEL = ""                # 可选，指定模型时填写
@@ -72,7 +72,7 @@ $env:TEST_REAL_AI_ENABLE_THINKING = "false" # 可选，默认 false（aliyun 建
 - 可选环境变量：`TEST_REAL_AI_PROVIDER`、`TEST_REAL_AI_API_BASE`、`TEST_REAL_AI_MODEL`、`TEST_REAL_AI_ENABLE_THINKING`
 - 未设置 `TEST_REAL_AI_API_KEY` 时，AI 集成测试会被 `skip`，并在 pytest 输出中提示被跳过的 API 覆盖范围。
 - 测试中强制 `AI_MOCK_MODE=False`，不会走模拟评分/模拟对话分支。
-- pytest 结束时会额外输出 `AI integration tests skipped` 汇总段，明确列出“被跳过的 API + 跳过原因 + 需要配置的变量”。
+- pytest 结束时会额外输出 `AI integration tests skipped` 汇总段，明确列出"被跳过的 API + 跳过原因 + 需要配置的变量"。
 
 当缺少 `TEST_REAL_AI_API_KEY` 时，以下 API 覆盖会被跳过：
 

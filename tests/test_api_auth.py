@@ -3,37 +3,6 @@
 from tests.conftest import PASSWORD
 
 
-def _register_user_via_api(client, username='new_student', phone='13800138000'):
-    from routes.auth import verification_codes
-
-    send = client.post('/api/auth/send-guardian-code', json={'phone': phone})
-    assert send.status_code == 200, send.get_json()
-    code = verification_codes[f'guardian:{phone}']['code']
-
-    payload = {
-        'username': username,
-        'password': PASSWORD,
-        'grade': 8,
-        'guardian_name': '家长',
-        'guardian_phone': phone,
-        'guardian_relationship': '母子',
-        'guardian_verification_code': code
-    }
-    reg = client.post('/api/auth/register', json=payload)
-    assert reg.status_code == 201, reg.get_json()
-    return reg.get_json()['data']['user']
-
-
-def test_auth_send_guardian_code(client):
-    res = client.post('/api/auth/send-guardian-code', json={'phone': '13800138009'})
-    assert res.status_code == 200
-
-
-def test_auth_register(client):
-    user = _register_user_via_api(client, username='student_register', phone='13800138010')
-    assert user['username'] == 'student_register'
-
-
 def test_auth_login(client, make_user):
     make_user('alice')
     res = client.post('/api/auth/login', json={'username': 'alice', 'password': PASSWORD})
@@ -84,8 +53,9 @@ def test_auth_export_data(client, make_user, login):
     assert data['user']['username'] == 'alice'
 
 
-def test_auth_me(client):
-    _register_user_via_api(client, username='student_me', phone='13800138011')
+def test_auth_me(client, make_user, login):
+    make_user('bob')
+    login('bob')
     res = client.get('/api/auth/me')
     assert res.status_code == 200
-    assert res.get_json()['data']['user']['username'] == 'student_me'
+    assert res.get_json()['data']['user']['username'] == 'bob'
