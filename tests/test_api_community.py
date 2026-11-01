@@ -99,7 +99,7 @@ def test_community_publish(client, app, make_user, login, scored_writing_real):
 def test_community_featured(client, app, make_user, login, scored_writing_real):
     work_id = _prepare_published_work(client, app, make_user, login, scored_writing_real)
     with app.app_context():
-        cw = CommunityWork.query.get(work_id)
+        cw = db.session.get(CommunityWork, work_id)
         cw.is_featured = True
         db.session.commit()
     res = client.get('/api/community/featured')
