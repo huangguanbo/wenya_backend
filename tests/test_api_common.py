@@ -40,17 +40,13 @@ def test_api_notifications(client, make_user, login):
     assert 'notifications' in res.get_json()['data']
 
 
-def test_api_challenges(client, make_user, login):
-    make_user('alice')
-    login('alice')
+def test_api_challenges(client):
     res = client.get('/api/challenges')
     assert res.status_code == 200
     assert len(res.get_json()['data']['challenges']) > 0
 
 
-def test_api_challenge_detail(client, make_user, login):
-    make_user('alice')
-    login('alice')
+def test_api_challenge_detail(client):
     lst = client.get('/api/challenges').get_json()['data']['challenges']
     cid = lst[0]['id']
     res = client.get(f'/api/challenges/{cid}')
@@ -58,10 +54,20 @@ def test_api_challenge_detail(client, make_user, login):
     assert res.get_json()['data']['challenge']['id'] == cid
 
 
-def test_api_materials(client, make_user, login):
-    make_user('alice')
-    login('alice')
+def test_api_materials(client):
     res = client.get('/api/materials')
     assert res.status_code == 200
     data = res.get_json()['data']
     assert 'materials' in data and 'categories' in data
+
+
+def test_static_content_apis_allow_anonymous(client):
+    """挑战/素材接口为纯静态内容，未登录也应返回 200。"""
+    for path in ('/api/challenges', '/api/materials', '/api/materials?category=quote'):
+        assert client.get(path).status_code == 200, path
+
+
+def test_user_scoped_api_rejects_anonymous(client):
+    """放开匿名范围仅限静态内容，用户数据接口未登录仍需 401。"""
+    assert client.get('/api/stats').status_code == 401
+    assert client.get('/api/notifications').status_code == 401

@@ -201,16 +201,14 @@ def get_notifications():
 
 
 @api_bp.route('/challenges', methods=['GET'])
-@login_required
 def get_challenges():
-    """获取写作挑战列表"""
+    """获取写作挑战列表（允许匿名访问）"""
     return success_response({'challenges': WRITING_CHALLENGES})
 
 
 @api_bp.route('/challenges/<challenge_id>', methods=['GET'])
-@login_required
 def get_challenge(challenge_id):
-    """获取单个写作挑战详情"""
+    """获取单个写作挑战详情（允许匿名访问）"""
     challenge = next((c for c in WRITING_CHALLENGES if c['id'] == challenge_id), None)
     if not challenge:
         from utils.response import error_response
@@ -219,9 +217,8 @@ def get_challenge(challenge_id):
 
 
 @api_bp.route('/materials', methods=['GET'])
-@login_required
 def get_materials():
-    """获取素材库"""
+    """获取素材库（允许匿名访问）"""
     category = request.args.get('category')
     if category and category in MATERIAL_LIBRARY:
         return success_response({'category': category, 'items': MATERIAL_LIBRARY[category]})

@@ -193,17 +193,17 @@
 ## 5.6 写作挑战
 
 - **GET** `/api/challenges`
-- 认证：是
+- 认证：否（允许匿名）
 - 返回：挑战列表（题目、描述、体裁、字数范围、难度）
 
 - **GET** `/api/challenges/{challenge_id}`
-- 认证：是
+- 认证：否（允许匿名）
 - 返回：单个挑战详情
 
 ## 5.7 素材库
 
 - **GET** `/api/materials`
-- 认证：是
+- 认证：否（允许匿名）
 - 查询参数：
   - `category`：`quote|idiom|example`
 - 返回：
